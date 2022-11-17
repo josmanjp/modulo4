@@ -1,149 +1,195 @@
--- MySQL Workbench Forward Engineering
-
-SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
-SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
-SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION';
-
--- -----------------------------------------------------
--- Schema portfolio
--- -----------------------------------------------------
--- Base de datos para portafolio
-
--- -----------------------------------------------------
--- Schema portfolio
+-- phpMyAdmin SQL Dump
+-- version 5.2.0
+-- https://www.phpmyadmin.net/
 --
--- Base de datos para portafolio
--- -----------------------------------------------------
-CREATE SCHEMA IF NOT EXISTS `portfolio` DEFAULT CHARACTER SET utf8 ;
-USE `portfolio` ;
+-- Servidor: 127.0.0.1
+-- Tiempo de generación: 17-11-2022 a las 16:35:57
+-- Versión del servidor: 10.4.24-MariaDB
+-- Versión de PHP: 8.1.6
 
--- -----------------------------------------------------
--- Table `portfolio`.`persona`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `portfolio`.`persona` (
-  `id` INT NOT NULL AUTO_INCREMENT,
-  `nombre` VARCHAR(45) NOT NULL,
-  `apellido` VARCHAR(45) NOT NULL,
-  `domicilio` VARCHAR(45) NULL,
-  `telefono` VARCHAR(12) NULL,
-  `correo` VARCHAR(45) NULL,
-  `sobre_mi` VARCHAR(250) NULL,
-  `url_foto` VARCHAR(150) NULL,
-  PRIMARY KEY (`id`))
-ENGINE = InnoDB;
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+START TRANSACTION;
+SET time_zone = "+00:00";
 
 
--- -----------------------------------------------------
--- Table `portfolio`.`lenguage_programacion`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `portfolio`.`lenguage_programacion` (
-  `id` INT NOT NULL,
-  `nombre` VARCHAR(45) NULL,
-  PRIMARY KEY (`id`))
-ENGINE = InnoDB;
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8mb4 */;
 
+--
+-- Base de datos: `portfolio`
+--
 
--- -----------------------------------------------------
--- Table `portfolio`.`experiencia`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `portfolio`.`experiencia` (
-  `id` INT NOT NULL AUTO_INCREMENT,
-  `titulo` VARCHAR(45) NOT NULL,
-  `porcentaje` INT NOT NULL,
-  `persona_id` INT NOT NULL,
-  `lenguage_programacion_id` INT NOT NULL,
-  PRIMARY KEY (`id`),
-  INDEX `fk_experiencia_persona1_idx` (`persona_id` ASC) VISIBLE,
-  INDEX `fk_experiencia_lenguage_programacion1_idx` (`lenguage_programacion_id` ASC) VISIBLE,
-  CONSTRAINT `fk_experiencia_persona1`
-    FOREIGN KEY (`persona_id`)
-    REFERENCES `portfolio`.`persona` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_experiencia_lenguage_programacion1`
-    FOREIGN KEY (`lenguage_programacion_id`)
-    REFERENCES `portfolio`.`lenguage_programacion` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB;
+-- --------------------------------------------------------
 
+--
+-- Estructura de tabla para la tabla `estudio`
+--
 
--- -----------------------------------------------------
--- Table `portfolio`.`categoria`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `portfolio`.`categoria` (
-  `id` INT NOT NULL AUTO_INCREMENT,
-  `nombre` VARCHAR(45) NOT NULL,
-  PRIMARY KEY (`id`))
-ENGINE = InnoDB;
+CREATE TABLE `estudio` (
+  `id` varchar(2) NOT NULL,
+  `titulo` varchar(30) NOT NULL,
+  `descripcion` varchar(200) NOT NULL,
+  `url_imagen` varchar(45) DEFAULT NULL,
+  `persona_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+-- --------------------------------------------------------
 
--- -----------------------------------------------------
--- Table `portfolio`.`servicios`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `portfolio`.`servicios` (
-  `id` INT NOT NULL AUTO_INCREMENT,
-  `titulo` VARCHAR(45) NOT NULL,
-  `descripcion` VARCHAR(45) NOT NULL,
-  `url_imagen` VARCHAR(45) NULL,
-  `persona_id` INT NOT NULL,
-  `categoria_id` INT NOT NULL,
-  PRIMARY KEY (`id`),
-  INDEX `fk_servicios_persona1_idx` (`persona_id` ASC) VISIBLE,
-  INDEX `fk_servicios_categoria1_idx` (`categoria_id` ASC) VISIBLE,
-  CONSTRAINT `fk_servicios_persona1`
-    FOREIGN KEY (`persona_id`)
-    REFERENCES `portfolio`.`persona` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_servicios_categoria1`
-    FOREIGN KEY (`categoria_id`)
-    REFERENCES `portfolio`.`categoria` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB;
+--
+-- Estructura de tabla para la tabla `experiencia`
+--
 
+CREATE TABLE `experiencia` (
+  `id` int(11) NOT NULL,
+  `titulo` varchar(45) NOT NULL,
+  `porcentaje` int(11) NOT NULL,
+  `persona_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
--- -----------------------------------------------------
--- Table `portfolio`.`proyectos`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `portfolio`.`proyectos` (
-  `id` INT NOT NULL AUTO_INCREMENT,
-  `titulo` VARCHAR(45) NOT NULL,
-  `descripcion` VARCHAR(200) NOT NULL,
-  `url_imagen` VARCHAR(150) NOT NULL,
-  `url` VARCHAR(150) NULL,
-  `persona_id` INT NOT NULL,
-  PRIMARY KEY (`id`),
-  INDEX `fk_proyectos_persona1_idx` (`persona_id` ASC) VISIBLE,
-  CONSTRAINT `fk_proyectos_persona1`
-    FOREIGN KEY (`persona_id`)
-    REFERENCES `portfolio`.`persona` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB;
+-- --------------------------------------------------------
 
+--
+-- Estructura de tabla para la tabla `persona`
+--
 
--- -----------------------------------------------------
--- Table `portfolio`.`estudio`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `portfolio`.`estudio` (
-  `id` VARCHAR(2) NOT NULL,
-  `titulo` VARCHAR(30) NOT NULL,
-  `descripcion` VARCHAR(200) NOT NULL,
-  `url_imagen` VARCHAR(45) NULL,
-  `persona_id` INT NOT NULL,
-  `contrasena` VARCHAR(10) NULL,
-  PRIMARY KEY (`id`),
-  INDEX `fk_estudio_persona_idx` (`persona_id` ASC) VISIBLE,
-  CONSTRAINT `fk_estudio_persona`
-    FOREIGN KEY (`persona_id`)
-    REFERENCES `portfolio`.`persona` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB;
+CREATE TABLE `persona` (
+  `id` int(11) NOT NULL,
+  `nombre` varchar(45) NOT NULL,
+  `apellido` varchar(45) NOT NULL,
+  `domicilio` varchar(45) DEFAULT NULL,
+  `telefono` varchar(12) DEFAULT NULL,
+  `correo` varchar(45) DEFAULT NULL,
+  `sobre_mi` varchar(250) DEFAULT NULL,
+  `url_foto` varchar(150) DEFAULT NULL,
+  `contrasena` varchar(10) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+-- --------------------------------------------------------
 
-SET SQL_MODE=@OLD_SQL_MODE;
-SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
-SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
+--
+-- Estructura de tabla para la tabla `proyectos`
+--
+
+CREATE TABLE `proyectos` (
+  `id` int(11) NOT NULL,
+  `titulo` varchar(45) NOT NULL,
+  `descripcion` varchar(200) NOT NULL,
+  `url_imagen` varchar(150) NOT NULL,
+  `url` varchar(150) DEFAULT NULL,
+  `persona_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `servicios`
+--
+
+CREATE TABLE `servicios` (
+  `id` int(11) NOT NULL,
+  `titulo` varchar(45) NOT NULL,
+  `descripcion` varchar(45) NOT NULL,
+  `url_imagen` varchar(45) DEFAULT NULL,
+  `persona_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Índices para tablas volcadas
+--
+
+--
+-- Indices de la tabla `estudio`
+--
+ALTER TABLE `estudio`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `fk_estudio_persona` (`persona_id`);
+
+--
+-- Indices de la tabla `experiencia`
+--
+ALTER TABLE `experiencia`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `fk_experiencia_persona1` (`persona_id`);
+
+--
+-- Indices de la tabla `persona`
+--
+ALTER TABLE `persona`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indices de la tabla `proyectos`
+--
+ALTER TABLE `proyectos`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `fk_proyectos_persona1` (`persona_id`);
+
+--
+-- Indices de la tabla `servicios`
+--
+ALTER TABLE `servicios`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `fk_servicios_persona1` (`persona_id`);
+
+--
+-- AUTO_INCREMENT de las tablas volcadas
+--
+
+--
+-- AUTO_INCREMENT de la tabla `experiencia`
+--
+ALTER TABLE `experiencia`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT de la tabla `persona`
+--
+ALTER TABLE `persona`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT de la tabla `proyectos`
+--
+ALTER TABLE `proyectos`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT de la tabla `servicios`
+--
+ALTER TABLE `servicios`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- Restricciones para tablas volcadas
+--
+
+--
+-- Filtros para la tabla `estudio`
+--
+ALTER TABLE `estudio`
+  ADD CONSTRAINT `fk_estudio_persona` FOREIGN KEY (`persona_id`) REFERENCES `persona` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+--
+-- Filtros para la tabla `experiencia`
+--
+ALTER TABLE `experiencia`
+  ADD CONSTRAINT `fk_experiencia_persona1` FOREIGN KEY (`persona_id`) REFERENCES `persona` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+--
+-- Filtros para la tabla `proyectos`
+--
+ALTER TABLE `proyectos`
+  ADD CONSTRAINT `fk_proyectos_persona1` FOREIGN KEY (`persona_id`) REFERENCES `persona` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+--
+-- Filtros para la tabla `servicios`
+--
+ALTER TABLE `servicios`
+  ADD CONSTRAINT `fk_servicios_persona1` FOREIGN KEY (`persona_id`) REFERENCES `persona` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+COMMIT;
+
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
